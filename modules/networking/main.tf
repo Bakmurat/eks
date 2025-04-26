@@ -1,4 +1,4 @@
-resource "aws_vpc" "main" {
+resource "aws_vpc" "fp-vpc" {
   cidr_block = var.vpc_cidr_block
   tags = {
     Name = "${var.project_name}-vpc"
