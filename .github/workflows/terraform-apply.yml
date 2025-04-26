@@ -1,0 +1,40 @@
+name: Terraform Apply
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: "us-west-2"
+  ENVIRONMENT_STAGE: "dev"
+
+jobs:
+  deploy-terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./roots/devops-project-main
+        shell: bash
+    environment: dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.IAM_ROLE }}
+          role-session-name: GitHubActionsRoleSession
+          aws-region: ${{ vars.AWS_REGION }}
+
+
+  
