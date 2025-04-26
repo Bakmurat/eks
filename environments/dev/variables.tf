@@ -35,3 +35,29 @@ variable "main_priv_subs_az" {
   description = "The availability zones for the private subnets"
   type        = list(string)
 }
+
+variable "main_ip_protocol" {
+  description = "The IP protocol to use for security group rules"
+  type        = string
+  default     = "-1" # All protocols
+}
+
+variable "main_cidr_ipv4" {
+  description = "The CIDR block for IPv4"
+  type        = string
+}
+
+variable "main_cidr_ipv6" {
+  description = "The CIDR block for IPv6"
+  type        = string
+}
+
+variable "main_service_ipv4_cidr" {
+  description = "The CIDR block for the Kubernetes service network"
+  type        = string
+}
+
+variable "main_cluster_version" {
+  description = "The version of the EKS cluster"
+  type        = string
+}

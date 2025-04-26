@@ -32,5 +32,15 @@ module "networking" {
 module "eks" {
   source = "../../modules/eks"
   project_name = var.main_project_name
+
+  vpc_id = module.networking.fp-vpc-id
+  subnet_ids = module.networking.fp-pub-subs-ids
+
+  ip_protocol = var.main_ip_protocol
+  cidr_ipv4 = var.main_cidr_ipv4
+  cidr_ipv6 = var.main_cidr_ipv6
+
+  cluster_version = var.main_cluster_version
+  service_ipv4_cidr = var.main_service_ipv4_cidr
 }
 
