@@ -16,10 +16,10 @@ env:
 jobs:
   deploy-terraform:
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: ./roots/devops-project-main
-    #     shell: bash
+    defaults:
+      run:
+        working-directory: /home/runner/work/eks/eks
+        shell: bash
     environment: dev
 
     steps:
