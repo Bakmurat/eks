@@ -24,3 +24,4 @@ module "networking" {
   vpc_cidr_block = var.main_vpc_cidr_block
   project_name   = var.main_project_name
 }
+

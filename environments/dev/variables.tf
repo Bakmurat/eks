@@ -15,3 +15,23 @@ variable "main_vpc_cidr_block" {
   type        = string
   default     = "10.0.0.0/16"
 }
+
+variable "main_pub_subnets_cidr" {
+  description = "The CIDR blocks for the public subnets"
+  type        = list(string)
+}
+
+variable "main_priv_subnets_cidr" {
+  description = "The CIDR blocks for the private subnets"
+  type        = list(string)
+}
+
+variable "main_pub_subs_az" {
+  description = "The availability zones for the public subnets"
+  type        = list(string)
+}
+
+variable "main_priv_subs_az" {
+  description = "The availability zones for the private subnets"
+  type        = list(string)
+}
