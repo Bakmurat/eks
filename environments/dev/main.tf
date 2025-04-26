@@ -23,5 +23,9 @@ module "networking" {
   source         = "../../modules/networking"
   vpc_cidr_block = var.main_vpc_cidr_block
   project_name   = var.main_project_name
+  pub_subnets_cidr = var.main_pub_subnets_cidr
+  priv_subnets_cidr = var.main_priv_subnets_cidr
+  pub_subs_az   = var.main_pub_subs_az
+  priv_subs_az  = var.main_priv_subs_az
 }
 
