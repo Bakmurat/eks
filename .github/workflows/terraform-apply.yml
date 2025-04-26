@@ -54,11 +54,9 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false -var-file=terraform.tfvars 
 
-      # # Build infrastructure according to Terraform configuration files
-      # - name: Terraform Apply
-      #   run: terraform apply -auto-approve -input=false -var-file=${ENVIRONMENT_STAGE}.tfvars ${{ env.CREATE_CLUSTER_OVERRIDE }}
-      #   env:
-      #     CREATE_CLUSTER_OVERRIDE: ${{ github.ref == 'refs/heads/main' && '-var=create_cluster_enabled=true' || '' }}
+      # Build infrastructure according to Terraform configuration files
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars 
 
 
 
