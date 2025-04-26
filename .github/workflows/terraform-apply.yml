@@ -48,11 +48,7 @@ jobs:
           ls -alt $GITHUB_WORKSPACE
 
           echo "Running Terraform Init"
-          terraform init -backend-config="bucket=${{vars.TF_STATE_BUCKET}}" -backend-config="key=${GITHUB_REF#refs/heads/}.tfstate" -backend-config="region=${{vars.AWS_REGION}}" 
-
-      # Checks that all Terraform configuration files adhere to a canonical format
-      - name: Terraform Format
-        run: terraform fmt -check
+          terraform init -backend-config="bucket=${{vars.TF_STATE_BUCKET}}" -backend-config="key=dev/terraform.tfstate" -backend-config="region=${{vars.AWS_REGION}}" 
 
       # # Generates an execution plan for Terraform
       # - name: Terraform Plan
