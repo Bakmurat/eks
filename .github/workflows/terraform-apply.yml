@@ -16,10 +16,10 @@ env:
 jobs:
   deploy-terraform:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./roots/devops-project-main
-        shell: bash
+    # defaults:
+    #   run:
+    #     working-directory: ./roots/devops-project-main
+    #     shell: bash
     environment: dev
 
     steps:
@@ -41,7 +41,10 @@ jobs:
         run: |
           echo "AWS_ACCOUNT_ID: $AWS_ACCOUNT_ID"
           AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-          
+
+          pwd
+          ls -alt
+
           echo "Running Terraform Init"
           terraform init -backend-config="bucket=${{vars.TF_STATE_BUCKET}}" -backend-config="key=${GITHUB_REF#refs/heads/}.tfstate" -backend-config="region=${{vars.AWS_REGION}}" 
 
