@@ -29,3 +29,8 @@ module "networking" {
   priv_subs_az  = var.main_priv_subs_az
 }
 
+module "eks" {
+  source = "../../modules/eks"
+  project_name = var.main_project_name
+}
+
