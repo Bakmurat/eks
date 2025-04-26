@@ -50,11 +50,11 @@ jobs:
           echo "Running Terraform Init"
           terraform init -backend-config="bucket=${{vars.TF_STATE_BUCKET}}" -backend-config="key=dev/terraform.tfstate" -backend-config="region=${{vars.AWS_REGION}}" 
 
-      # # Generates an execution plan for Terraform
-      # - name: Terraform Plan
-      #   run: terraform plan -input=false -var-file=${ENVIRONMENT_STAGE}.tfvars ${{ env.CREATE_CLUSTER_OVERRIDE }}
-      #   env:
-      #     CREATE_CLUSTER_OVERRIDE: ${{ github.ref == 'refs/heads/main' && '-var=create_cluster_enabled=true' || '' }}
+      # Generates an execution plan for Terraform
+      - name: Terraform Plan
+        run: terraform plan -input=false -var-file=terraform.tfvars ${{ env.CREATE_CLUSTER_OVERRIDE }}
+        env:
+          CREATE_CLUSTER_OVERRIDE: ${{ github.ref == 'refs/heads/main' && '-var=create_cluster_enabled=true' || '' }}
 
       # # Build infrastructure according to Terraform configuration files
       # - name: Terraform Apply
