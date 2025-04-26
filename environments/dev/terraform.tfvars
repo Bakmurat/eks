@@ -12,4 +12,4 @@ main_cidr_ipv4  = "0.0.0.0/0" # IPv4 CIDR block
 main_cidr_ipv6  = "::/0" # IPv6 CIDR block
 
 main_cluster_version = "1.31"
-main_service_ipv4_cidr = "10.1.21.0/23"
+main_service_ipv4_cidr = "10.1.21.0/24"
