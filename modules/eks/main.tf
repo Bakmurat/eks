@@ -158,6 +158,12 @@ resource "aws_eks_cluster" "fp-cluster" {
   vpc_config {
     subnet_ids         = var.subnet_ids
     security_group_ids = [aws_security_group.eks-cluster-sg.id]
+    endpoint_private_access = true
+    endpoint_public_access  = true
+  }
+
+  access_config {
+    bootstrap_cluster_creator_admin_permissions = true
   }
 
   kubernetes_network_config {
