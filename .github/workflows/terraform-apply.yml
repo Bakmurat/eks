@@ -59,7 +59,6 @@ jobs:
       #   run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars 
 
       - name: Terraform Destroy
-        if: github.event_name == 'workflow_dispatch'
         run: terraform destroy -auto-approve -input=false -var-file=terraform.tfvars 
 
 
