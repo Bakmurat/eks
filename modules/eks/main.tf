@@ -138,6 +138,15 @@ resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-from-cluster" {
   ip_protocol                  = var.ip_protocol
 }
 
+# Allow SSH from anywhere (for testing purposes, not for prod!)
+resource "aws_vpc_security_group_ingress_rule" "workers_ssh" {
+  security_group_id = aws_security_group.workers-sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 22
+  to_port           = 22
+  ip_protocol       = "tcp"
+}
+
 # Allow any egress traffic for ipv4
 resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv4-workers" {
   security_group_id = aws_security_group.workers-sg.id
@@ -203,6 +212,7 @@ resource "aws_launch_template" "worker-nodes-lt" {
 
   user_data = base64encode(<<-EOF
     #!/bin/bash
+    set -o xtrace
     /etc/eks/bootstrap.sh ${aws_eks_cluster.fp-cluster.name}
   EOF
   )
