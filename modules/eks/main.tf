@@ -85,33 +85,47 @@ resource "aws_security_group" "eks-cluster-sg" {
   }
 }
 
-# Allow any ingress traffic within its own sg
-resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-cluster-self" {
-  security_group_id            = aws_security_group.eks-cluster-sg.id
-  referenced_security_group_id = aws_security_group.eks-cluster-sg.id
-  ip_protocol                  = var.ip_protocol
+# Allow all ingress traffic from anywhere (testing only)
+resource "aws_vpc_security_group_ingress_rule" "allow_all_ingress_controlplane" {
+  security_group_id = aws_security_group.eks_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # all protocols
 }
 
-# Allow any ingress traffic from the worker nodes' sg
-resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-from-workers" {
-  security_group_id            = aws_security_group.eks-cluster-sg.id
-  referenced_security_group_id = aws_security_group.workers-sg.id
-  ip_protocol                  = var.ip_protocol
+# Allow all egress traffic to anywhere
+resource "aws_vpc_security_group_egress_rule" "allow_all_egress_controlplane" {
+  security_group_id = aws_security_group.eks_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # all protocols
 }
 
-# Allow any egress traffic for ipv4
-resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv4-cluster" {
-  security_group_id = aws_security_group.eks-cluster-sg.id
-  cidr_ipv4         = var.cidr_ipv4
-  ip_protocol       = var.ip_protocol # semantically equivalent to all ports
-}
+# # Allow any ingress traffic within its own sg
+# resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-cluster-self" {
+#   security_group_id            = aws_security_group.eks-cluster-sg.id
+#   referenced_security_group_id = aws_security_group.eks-cluster-sg.id
+#   ip_protocol                  = var.ip_protocol
+# }
 
-# Allow any egress traffic for ipv6
-resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv6-cluster" {
-  security_group_id = aws_security_group.eks-cluster-sg.id
-  cidr_ipv6         = var.cidr_ipv6
-  ip_protocol       = var.ip_protocol # semantically equivalent to all ports
-}
+# # Allow any ingress traffic from the worker nodes' sg
+# resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-from-workers" {
+#   security_group_id            = aws_security_group.eks-cluster-sg.id
+#   referenced_security_group_id = aws_security_group.workers-sg.id
+#   ip_protocol                  = var.ip_protocol
+# }
+
+# # Allow any egress traffic for ipv4
+# resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv4-cluster" {
+#   security_group_id = aws_security_group.eks-cluster-sg.id
+#   cidr_ipv4         = var.cidr_ipv4
+#   ip_protocol       = var.ip_protocol # semantically equivalent to all ports
+# }
+
+# # Allow any egress traffic for ipv6
+# resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv6-cluster" {
+#   security_group_id = aws_security_group.eks-cluster-sg.id
+#   cidr_ipv6         = var.cidr_ipv6
+#   ip_protocol       = var.ip_protocol # semantically equivalent to all ports
+# }
 
 
 # Define the security group for the worker nodes
@@ -124,42 +138,56 @@ resource "aws_security_group" "workers-sg" {
   }
 }
 
-# Allow any ingress traffic within its own sg
-resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-workers-self" {
-  security_group_id            = aws_security_group.workers-sg.id
-  referenced_security_group_id = aws_security_group.workers-sg.id
-  ip_protocol                  = var.ip_protocol
-}
-
-# Allow any ingress traffic from the cluster's sg
-resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-from-cluster" {
-  security_group_id            = aws_security_group.workers-sg.id
-  referenced_security_group_id = aws_security_group.eks-cluster-sg.id
-  ip_protocol                  = var.ip_protocol
-}
-
-# Allow SSH from anywhere (for testing purposes, not for prod!)
-resource "aws_vpc_security_group_ingress_rule" "workers_ssh" {
-  security_group_id = aws_security_group.workers-sg.id
+# Allow all ingress traffic from anywhere (testing only)
+resource "aws_vpc_security_group_ingress_rule" "allow_all_ingress" {
+  security_group_id = aws_security_group.node_sg.id
   cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 22
-  to_port           = 22
-  ip_protocol       = "tcp"
+  ip_protocol       = "-1" # all protocols
 }
 
-# Allow any egress traffic for ipv4
-resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv4-workers" {
-  security_group_id = aws_security_group.workers-sg.id
-  cidr_ipv4         = var.cidr_ipv4
-  ip_protocol       = var.ip_protocol # semantically equivalent to all ports
+# Allow all egress traffic to anywhere
+resource "aws_vpc_security_group_egress_rule" "allow_all_egress" {
+  security_group_id = aws_security_group.node_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # all protocols
 }
 
-# Allow any egress traffic for ipv6
-resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv6-workers" {
-  security_group_id = aws_security_group.workers-sg.id
-  cidr_ipv6         = var.cidr_ipv6
-  ip_protocol       = var.ip_protocol # semantically equivalent to all ports
-}
+# # Allow any ingress traffic within its own sg
+# resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-workers-self" {
+#   security_group_id            = aws_security_group.workers-sg.id
+#   referenced_security_group_id = aws_security_group.workers-sg.id
+#   ip_protocol                  = var.ip_protocol
+# }
+
+# # Allow any ingress traffic from the cluster's sg
+# resource "aws_vpc_security_group_ingress_rule" "allow-tls-ipv4-from-cluster" {
+#   security_group_id            = aws_security_group.workers-sg.id
+#   referenced_security_group_id = aws_security_group.eks-cluster-sg.id
+#   ip_protocol                  = var.ip_protocol
+# }
+
+# # Allow SSH from anywhere (for testing purposes, not for prod!)
+# resource "aws_vpc_security_group_ingress_rule" "workers_ssh" {
+#   security_group_id = aws_security_group.workers-sg.id
+#   cidr_ipv4         = "0.0.0.0/0"
+#   from_port         = 22
+#   to_port           = 22
+#   ip_protocol       = "tcp"
+# }
+
+# # Allow any egress traffic for ipv4
+# resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv4-workers" {
+#   security_group_id = aws_security_group.workers-sg.id
+#   cidr_ipv4         = var.cidr_ipv4
+#   ip_protocol       = var.ip_protocol # semantically equivalent to all ports
+# }
+
+# # Allow any egress traffic for ipv6
+# resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-ipv6-workers" {
+#   security_group_id = aws_security_group.workers-sg.id
+#   cidr_ipv6         = var.cidr_ipv6
+#   ip_protocol       = var.ip_protocol # semantically equivalent to all ports
+# }
 
 resource "aws_eks_cluster" "fp-cluster" {
   name     = "${var.project_name}-main-cluster"
