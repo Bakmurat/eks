@@ -163,6 +163,7 @@ resource "aws_eks_cluster" "fp-cluster" {
   }
 
   access_config {
+    authentication_mode = "API_AND_CONFIG_MAP"
     bootstrap_cluster_creator_admin_permissions = true
   }
 
@@ -179,4 +180,8 @@ resource "aws_eks_cluster" "fp-cluster" {
   tags = {
     Name = "${var.project_name}-main-cluster"
   }
+}
+
+data "aws_ssm_parameter" "eks_ami_id" {
+  name = "/aws/service/eks/optimized-ami/${var.cluster_version}/amazon-linux-2/recommended/image_id"
 }
