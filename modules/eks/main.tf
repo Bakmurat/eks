@@ -1,3 +1,7 @@
+data "aws_ssm_parameter" "eks_ami_id" {
+  name = "/aws/service/eks/optimized-ami/${var.cluster_version}/amazon-linux-2/recommended/image_id"
+}
+
 # Define the assume role policy document
 data "aws_iam_policy_document" "cluster-assume-role" {
   statement {
@@ -180,9 +184,7 @@ resource "aws_eks_cluster" "fp-cluster" {
   }
 }
 
-data "aws_ssm_parameter" "eks_ami_id" {
-  name = "/aws/service/eks/optimized-ami/${var.cluster_version}/amazon-linux-2/recommended/image_id"
-}
+
 
 resource "aws_iam_instance_profile" "workers-instance-profile" {
   name = "${var.project_name}-workers-instance-profile"
@@ -191,7 +193,7 @@ resource "aws_iam_instance_profile" "workers-instance-profile" {
 
 resource "aws_launch_template" "worker-nodes-lt" {
   name          = "${var.project_name}-worker-node-"
-  image_id      = data.aws_ssm_parameter.eks-ami-id.value
+  image_id      = "ami-05c5c306e916eaf70"
   instance_type = var.instance_type
 
   network_interfaces {
