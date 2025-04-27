@@ -339,8 +339,4 @@ resource "aws_eks_addon" "coredns" {
   addon_name   = "coredns"
 }
 
-resource "aws_eks_addon" "ebs_csi_driver" {
-  cluster_name = aws_eks_cluster.fp-cluster.name
-  addon_name   = "ebs-csi-driver"
-}
 

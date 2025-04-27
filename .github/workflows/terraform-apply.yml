@@ -54,9 +54,13 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false -var-file=terraform.tfvars 
 
-      # Build infrastructure according to Terraform configuration files
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars 
+      # # Build infrastructure according to Terraform configuration files
+      # - name: Terraform Apply
+      #   run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars 
+
+      - name: Terraform Destroy
+        if: github.event_name == 'workflow_dispatch'
+        run: terraform destroy -auto-approve -input=false -var-file=terraform.tfvars 
 
 
 
