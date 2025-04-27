@@ -301,7 +301,7 @@ resource "null_resource" "update_aws_auth" {
 
   provisioner "local-exec" {
     command = <<-EOT
-      aws eks update-kubeconfig --name "${var.project_name}-main-cluster" --region ${data.aws_region.current.name}
+      aws eks update-kubeconfig --name "studentgroup-main-cluster" --region us-west-2
       kubectl apply -f - <<EOF
       apiVersion: v1
       kind: ConfigMap
