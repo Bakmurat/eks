@@ -42,5 +42,13 @@ module "eks" {
 
   cluster_version = var.main_cluster_version
   service_ipv4_cidr = var.main_service_ipv4_cidr
+
+  instance_type                            = var.main_instance_type
+  asg_desired_capacity                     = var.main_asg_desired_capacity
+  asg_max_size                             = var.main_asg_max_size
+  asg_min_size                             = var.main_asg_min_size
+  on_demand_percentage_above_base_capacity = var.main_on_demand_percentage_above_base_capacity
+  spot_allocation_strategy                 = var.main_spot_allocation_strategy
+  on_demand_base_capacity                  = var.main_on_demand_base_capacity
 }
 

@@ -73,6 +73,11 @@ resource "aws_iam_role_policy_attachment" "admin-role-attachment" {
   role       = aws_iam_role.worker-nodes-role.name
 }
 
+resource "aws_iam_role_policy_attachment" "ebs_csi_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.worker-nodes-role.name
+}
+
 # Create a sg for the cluster
 resource "aws_security_group" "eks-cluster-sg" {
   name   = "${var.project_name}-cluster-sg"
@@ -184,4 +189,76 @@ resource "aws_eks_cluster" "fp-cluster" {
 
 data "aws_ssm_parameter" "eks_ami_id" {
   name = "/aws/service/eks/optimized-ami/${var.cluster_version}/amazon-linux-2/recommended/image_id"
+}
+
+resource "aws_iam_instance_profile" "workers-instance-profile" {
+  name = "${var.project_name}-workers-instance-profile"
+  role = aws_iam_role.worker-nodes-role.name
+}
+
+resource "aws_launch_template" "worker-nodes-lt" {
+  name          = "${var.project_name}-worker-node-"
+  image_id      = data.aws_ssm_parameter.eks-ami-id.value
+  instance_type = var.instance_type
+
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [aws_security_group.workers-sg.id]
+  }
+
+  user_data = base64encode(<<-EOF
+    #!/bin/bash
+    /etc/eks/bootstrap.sh ${aws_eks_cluster.fp-cluster.name}
+  EOF
+  )
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "${var.project_name}-main-cluster-node"
+    }
+  }
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.workers-instance-profile.name
+  }
+
+}
+
+
+resource "aws_autoscaling_group" "eks_asg" {
+  name                = "${var.project_name}-ASG"
+  desired_capacity    = var.asg_desired_capacity
+  max_size            = var.asg_max_size
+  min_size            = var.asg_min_size
+  vpc_zone_identifier = var.subnet_ids
+
+  mixed_instances_policy {
+    instances_distribution {
+      on_demand_base_capacity                  = var.on_demand_base_capacity
+      on_demand_percentage_above_base_capacity = var.on_demand_percentage_above_base_capacity
+      spot_allocation_strategy                   = var.spot_allocation_strategy 
+    }
+
+    launch_template {
+      launch_template_specification {
+        launch_template_id = aws_launch_template.worker-nodes-lt.id
+        version            = "$Latest"
+      }
+    }
+  }
+
+  capacity_rebalance = true
+
+  tag {
+    key                 = "Name"
+    value               = "${var.project_name}-worker-node"
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "kubernetes.io/cluster/${aws_eks_cluster.fp-cluster.name}"
+    value               = "owned"
+    propagate_at_launch = true
+  }
+
 }

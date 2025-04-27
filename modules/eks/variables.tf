@@ -38,3 +38,39 @@ variable "cidr_ipv6" {
   description = "The CIDR block for IPv6"
   type        = string
 }
+
+variable "instance_type" {
+  description = "The instance type for the EKS worker nodes"
+  type        = string
+  default     = "t2.small"
+}
+
+variable "asg_desired_capacity" {
+  description = "The desired capacity of the Auto Scaling group"
+  type        = number
+}
+
+variable "asg_max_size" {
+  description = "The maximum size of the Auto Scaling group"
+  type        = number
+}
+
+variable "asg_min_size" {
+  description = "The minimum size of the Auto Scaling group"
+  type        = number
+}
+
+variable "on_demand_base_capacity" {
+  description = "The percentage of on-demand instances above the base capacity"
+  type        = number
+}
+
+variable "on_demand_percentage_above_base_capacity" {
+  description = "The percentage of on-demand instances above the base capacity"
+  type        = number
+}
+
+variable "spot_allocation_strategy" {
+  description = "The allocation strategy for spot instances"
+  type        = string
+}

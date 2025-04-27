@@ -61,3 +61,39 @@ variable "main_cluster_version" {
   description = "The version of the EKS cluster"
   type        = string
 }
+
+variable "main_instance_type" {
+  description = "The instance type for the EKS worker nodes"
+  type        = string
+  default     = "t2.small"
+}
+
+variable "main_asg_desired_capacity" {
+  description = "The desired capacity of the Auto Scaling group"
+  type        = number
+}
+
+variable "main_asg_max_size" {
+  description = "The maximum size of the Auto Scaling group"
+  type        = number
+}
+
+variable "main_asg_min_size" {
+  description = "The minimum size of the Auto Scaling group"
+  type        = number
+}
+
+variable "main_on_demand_base_capacity" {
+  description = "The percentage of on-demand instances above the base capacity"
+  type        = number
+}
+
+variable "main_on_demand_percentage_above_base_capacity" {
+  description = "The percentage of on-demand instances above the base capacity"
+  type        = number
+}
+
+variable "main_spot_allocation_strategy" {
+  description = "The allocation strategy for spot instances"
+  type        = string
+}
