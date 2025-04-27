@@ -295,3 +295,31 @@ resource "aws_autoscaling_group" "eks_asg" {
   }
 
 }
+
+resource "null_resource" "update_aws_auth" {
+  depends_on = [aws_eks_cluster.fp-cluster]
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      aws eks update-kubeconfig --name "${var.project_name}-main-cluster" --region ${data.aws_region.current.name}
+      kubectl apply -f - <<EOF
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: aws-auth
+        namespace: kube-system
+      data:
+        mapRoles: |
+          - rolearn: ${aws_iam_role.worker-nodes-role.arn}
+            username: system:node:{{EC2PrivateDNSName}}
+            groups:
+              - system:bootstrappers
+              - system:nodes
+          - rolearn: arn:aws:iam::123848992453:user/admin
+            username: admin
+            groups:
+              - system:masters
+      EOF
+    EOT
+  }
+}
