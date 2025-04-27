@@ -330,7 +330,7 @@ resource "aws_eks_addon" "vpc_cni" {
 }
 
 resource "aws_eks_addon" "kube_proxy" {
-  cluster_name   = aws_eks_cluster.main.name
+  cluster_name   = aws_eks_cluster.fp-cluster.name
   addon_name     = "kube-proxy"
 }
 
