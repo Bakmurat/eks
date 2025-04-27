@@ -23,13 +23,6 @@ resource "aws_iam_role_policy_attachment" "eks-cluster-role-AmazonEKSClusterPoli
   role       = aws_iam_role.eks-cluster-role.name
 }
 
-# Attach policy for the EBS CSI add-on
-resource "aws_iam_role_policy_attachment" "ebs_csi_policy_attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-  role       = aws_iam_role.eks-cluster-role.name
-}
-
-
 resource "aws_iam_role_policy_attachment" "eks_service_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
   role       = aws_iam_role.eks-cluster-role.name
