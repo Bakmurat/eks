@@ -87,14 +87,14 @@ resource "aws_security_group" "eks-cluster-sg" {
 
 # Allow all ingress traffic from anywhere (testing only)
 resource "aws_vpc_security_group_ingress_rule" "allow_all_ingress_controlplane" {
-  security_group_id = aws_security_group.eks_sg.id
+  security_group_id = aws_security_group.eks-cluster-sg.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # all protocols
 }
 
 # Allow all egress traffic to anywhere
 resource "aws_vpc_security_group_egress_rule" "allow_all_egress_controlplane" {
-  security_group_id = aws_security_group.eks_sg.id
+  security_group_id = aws_security_group.eks-cluster-sg.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # all protocols
 }
@@ -140,14 +140,14 @@ resource "aws_security_group" "workers-sg" {
 
 # Allow all ingress traffic from anywhere (testing only)
 resource "aws_vpc_security_group_ingress_rule" "allow_all_ingress" {
-  security_group_id = aws_security_group.node_sg.id
+  security_group_id = aws_security_group.workers-sg.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # all protocols
 }
 
 # Allow all egress traffic to anywhere
 resource "aws_vpc_security_group_egress_rule" "allow_all_egress" {
-  security_group_id = aws_security_group.node_sg.id
+  security_group_id = aws_security_group.workers-sg.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # all protocols
 }
